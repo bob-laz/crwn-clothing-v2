@@ -6,13 +6,11 @@ import "./shop.styles.scss";
 const Shop = () => {
   const { products } = useContext(ProductsContext);
 
-  console.log(products);
-
   return (
     <div className="products-container">
       {products &&
-        products.map(({ id, ...product }) => (
-          <ProductCard key={id} product={product}></ProductCard>
+        products.map((product) => (
+          <ProductCard key={product.id} product={product}></ProductCard>
         ))}
     </div>
   );

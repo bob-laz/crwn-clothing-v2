@@ -20,11 +20,7 @@
     height: 240px;
     display: flex;
     flex-direction: column;
-    overflow: scroll;
-  }
-
-  .cart-items::-webkit-scrollbar {
-    background: transparent; /* make scrollbar transparent */
+    overflow: auto;
   }
 
   button {
