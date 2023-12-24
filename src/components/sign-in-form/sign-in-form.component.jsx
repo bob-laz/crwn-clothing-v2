@@ -51,9 +51,10 @@ const SignInForm = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const signInWithGoogle = () => {
-    // todo: async?
-    signInWithGooglePopup();
+  const signInWithGoogle = async (event) => {
+    event.target.disabled = true;
+    await signInWithGooglePopup();
+    event.target.disabled = false;
   };
 
   return (
