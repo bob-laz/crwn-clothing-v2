@@ -12,8 +12,7 @@ import {
 } from "./util/firebase.utils";
 import { setCurrentUser } from "./store/user/user.action.js";
 import { useDispatch } from "react-redux";
-import { getCategoriesAndDocuments } from "./util/firebase.utils";
-import { setCategoriesMap } from "./store/categories/category.action.js";
+import { fetchCategoriesAsync } from "./store/categories/category.action.js";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -31,11 +30,7 @@ const App = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    const getCategoryMap = async () => {
-      const categoriesArray = await getCategoriesAndDocuments();
-      dispatch(setCategoriesMap(categoriesArray));
-    };
-    getCategoryMap();
+    dispatch(fetchCategoriesAsync());
   }, [dispatch]);
 
   return (
