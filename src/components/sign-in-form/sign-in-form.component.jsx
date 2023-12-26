@@ -1,8 +1,4 @@
 import { useState } from "react";
-import {
-  signInAuthUserWithEmailAndPassword,
-  signInWithGooglePopup,
-} from "../../util/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import {
@@ -10,6 +6,11 @@ import {
   BaseH2,
   ButtonsContainer,
 } from "./sign-in-form.styles.js";
+import { useDispatch } from "react-redux";
+import {
+  googleSignInStart,
+  emailSignInStart,
+} from "../../store/user/user.action.js";
 
 const defaultFormFields = {
   email: "",
@@ -17,32 +18,12 @@ const defaultFormFields = {
 };
 
 const SignInForm = () => {
+  const dispatch = useDispatch();
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
 
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
-  };
-
-  const handleEmailPasswordSubmit = async (event) => {
-    event.preventDefault();
-
-    try {
-      await signInAuthUserWithEmailAndPassword(email, password);
-
-      resetFormFields();
-    } catch (err) {
-      switch (err.code) {
-        case "auth/wrong-password":
-          alert("incorrect password for email");
-          break;
-        case "auth/user-not-found":
-          alert("no user associated with this email");
-          break;
-        default:
-          console.error(err);
-      }
-    }
   };
 
   const handleChange = (event) => {
@@ -51,17 +32,26 @@ const SignInForm = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const signInWithGoogle = async (event) => {
-    event.target.disabled = true;
-    await signInWithGooglePopup();
-    event.target.disabled = false;
+  const signInWithGoogle = async () => {
+    dispatch(googleSignInStart());
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      dispatch(emailSignInStart(email, password));
+      resetFormFields();
+    } catch (error) {
+      console.log("user sign in failed", error);
+    }
   };
 
   return (
     <SignInContainer>
       <BaseH2>I already have an account</BaseH2>
       <span>Sign in with your email and password</span>
-      <form onSubmit={handleEmailPasswordSubmit}>
+      <form onSubmit={handleSubmit}>
         <FormInput
           labelText="Email"
           type="email"
